@@ -17,6 +17,8 @@ def experiment(
         use_tqdm: bool = True,
         action_cost: float = -1,
         exp_hash: str = '',
+        gage_init_std: float = -20,
+        scale_max_return: float = 1.0,
 ):
     from maxinforl_jax.utils.train_utils import train
     ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -34,9 +36,9 @@ def experiment(
         env_kwargs['action_cost'] = action_cost
     train_kwargs = conf['train_kwargs']
     train_kwargs['replay_buffer_size'] = min(train_kwargs['replay_buffer_size'], max_steps)
-    if 'updates_per_step' in conf_alg:
-        train_kwargs['updates_per_step'] = conf_alg['updates_per_step']
-        del conf_alg['updates_per_step']
+    
+    train_kwargs['gage_init_std']=gage_init_std
+    train_kwargs['scale_max_return']=scale_max_return
 
     train(
         project_name=project_name,
@@ -80,6 +82,8 @@ def main(args):
         use_tqdm=bool(args.use_tqdm),
         seed=args.seed,
         action_cost=args.action_cost,
+        gage_init_std=args.gage_init_std,
+        scale_max_return=args.scale_max_return,
     )
 
 
@@ -98,6 +102,9 @@ if __name__ == '__main__':
     parser.add_argument('--action_cost', type=float, default=-1)
 
     parser.add_argument('--seed', type=int, default=0)
+
+    parser.add_argument('--gage_init_std', type=float, default=0.0)
+    parser.add_argument('--scale_max_return', type=float, default=1.0)
 
     args = parser.parse_args()
     main(args)

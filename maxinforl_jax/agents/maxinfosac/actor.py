@@ -20,14 +20,15 @@ def update(key: PRNGKey,
     key, target_key = jax.random.split(key, 2)
 
     def actor_loss_fn(actor_params: Params) -> Tuple[jnp.ndarray, Tuple[EnsembleState, InfoDict]]:
-        dist = actor.apply_fn({'params': actor_params}, batch.observations)
+        dist, log_stds, means  = actor.apply_fn({'params': actor_params}, batch.observations)
         actions = dist.sample(seed=key)
         log_probs = dist.log_prob(actions)
         q1, q2 = critic(batch.observations, actions)
         q = jnp.minimum(q1, q2)
 
         # getting info gain objective
-        target_actions = target_actor(batch.observations).sample(seed=target_key)
+        target_dist,_,_ = target_actor(batch.observations)
+        target_actions = target_dist.sample(seed=target_key)
         target_inp = jnp.concatenate([batch.observations, target_actions], axis=-1)
         inp = jnp.concatenate([batch.observations, actions], axis=-1)
         total_inp = jnp.concatenate([inp, target_inp], axis=0)
@@ -46,6 +47,7 @@ def update(key: PRNGKey,
             'target_info_gain': target_info_gain.mean(),
             # 'actor_info_gain_nans': jnp.isnan(info_gain).sum(),
             # 'target_actor_info_gain_nans': jnp.isnan(target_info_gain).sum(),
+            "std_mean": jnp.mean(jnp.exp(log_stds)), "mean_min": jnp.min(means), "mean_max": jnp.max(means)
         })
 
     new_actor, (new_ens_state, info) = actor.apply_gradient(actor_loss_fn)

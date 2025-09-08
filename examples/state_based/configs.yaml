@@ -32,6 +32,16 @@ dmc_small:
     actor_lr: 0.0003
     critic_lr: 0.0003
     temp_lr: 0.0003
+  sacgage:
+    hidden_dims: [256, 256]
+    discount: 0.99
+    tau: 0.005
+    target_update_period: 1
+    target_entropy: NULL
+    backup_entropy: true
+    actor_lr: 0.0003
+    critic_lr: 0.0003
+    temp_lr: 0.0003
   redq:
     hidden_dims: [256, 256]
     discount: 0.99
@@ -87,6 +97,16 @@ dmc_big:
     dyn_ent_lr: 0.0003
     model_hidden_dims: [1024, 1024]
   sac:
+    hidden_dims: [1024, 1024]
+    discount: 0.99
+    tau: 0.005
+    target_update_period: 1
+    target_entropy: NULL
+    backup_entropy: true
+    actor_lr: 0.0003
+    critic_lr: 0.0003
+    temp_lr: 0.0003
+  sacgage:
     hidden_dims: [1024, 1024]
     discount: 0.99
     tau: 0.005
@@ -160,6 +180,16 @@ gym:
     actor_lr: 0.0003
     critic_lr: 0.0003
     temp_lr: 0.0003
+  sacgage:
+    hidden_dims: [ 256, 256 ]
+    discount: 0.99
+    tau: 0.005
+    target_update_period: 1
+    target_entropy: NULL
+    backup_entropy: true
+    actor_lr: 0.0003
+    critic_lr: 0.0003
+    temp_lr: 0.0003
 
 humanoid_bench:
   env_kwargs:
@@ -195,6 +225,17 @@ humanoid_bench:
     actor_lr: 0.0005
     critic_lr: 0.0005
     temp_lr: 0.0005
+  sacgage:
+    hidden_dims: [512, 512]
+    discount: 0.99
+    tau: 0.005
+    target_update_period: 1
+    target_entropy: NULL
+    backup_entropy: true
+    actor_lr: 0.0005
+    critic_lr: 0.0005
+    temp_lr: 0.0005
+    init_temperature: 0.0
 
 cartpole-swingup_sparse:
   env_class: dmc_small
@@ -223,7 +264,7 @@ finger-turn_hard:
 
 walker-run:
   env_class: dmc_small
-  max_steps: 500_000
+  max_steps: 1_000_000
   eval_interval: 10_000
 
 cheetah-run:

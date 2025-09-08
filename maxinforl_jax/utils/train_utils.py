@@ -1,6 +1,6 @@
 import os
 import random
-import time
+import datetime
 
 import gymnasium.wrappers
 import numpy as np
@@ -9,7 +9,7 @@ import jax.numpy as jnp
 from typing import Optional, Dict, Callable
 from tensorboardX import SummaryWriter
 
-from jaxrl.agents import DDPGLearner, REDQLearner, SACLearner, DrQLearner
+from jaxrl.agents import DDPGLearner, REDQLearner, SACLearner, DrQLearner, SACGAGELearner
 from maxinforl_jax.agents import MaxInfoSacLearner, MaxInfoREDQLearner, MaxInfoDrQv2Learner, MaxInfoDrQLearner, DrQv2Learner
 from jaxrl.datasets import ReplayBuffer
 from maxinforl_jax.datasets import NstepReplayBuffer
@@ -19,8 +19,22 @@ import wandb
 import gymnasium as gym
 from gymnasium.wrappers import RescaleAction
 from gymnasium.wrappers.pixel_observation import PixelObservationWrapper
+import jax
 
 from jaxrl import wrappers
+
+max_returns = {
+    "humanoid_bench/h1-run-v0": 800.0,
+    "cartpole-swingup_sparse": 800,
+    "quadruped-run": 800.0,
+    "walker-run": 800.0,
+    "Humanoid-v3": 5000.0,
+    "Ant-v3": 5500.0,
+    "Walker2d-v3": 4800.0,
+    "HalfCheetah-v3": 11000.0,
+    "Hopper-v3": 3600.0,
+    "Swimmer-v3": 90.0,
+}
 
 
 def make_humanoid_bench_env(
@@ -130,8 +144,12 @@ def train(
         n_steps_returns: int = -1,
         recording_image_size: Optional[int] = None,
         eval_episode_trigger: Optional[Callable[[int], bool]] = None,
+        gage_init_std: float = 0.0,
+        scale_max_return: float = 1.0,
 ):
-    run_name = f"{env_name}__{alg_name}__{seed}__{int(time.time())}__{exp_hash}"
+    time_run = datetime.datetime.now()
+    s_time_run = f"{time_run.year}{time_run.month}{time_run.day}-{time_run.hour}{time_run.minute}"
+    run_name = f"{env_name}_{alg_name}_g-{gage_init_std}-{scale_max_return}_lc-_{seed}_{s_time_run}"
 
     if save_video:
         video_train_folder = os.path.join(logs_dir, 'video', 'train')
@@ -185,6 +203,10 @@ def train(
 
     if alg_name == 'sac':
         agent = SACLearner(seed,
+                           env.observation_space.sample(),
+                           env.action_space.sample(), **alg_kwargs)
+    elif alg_name == 'sacgage':
+        agent = SACGAGELearner(seed,
                            env.observation_space.sample(),
                            env.action_space.sample(), **alg_kwargs)
     elif alg_name == 'redq':
@@ -247,6 +269,13 @@ def train(
 
     eval_returns = []
     observation, _ = env.reset()
+
+    # gage
+    goal_achievement = 0.0
+    max_return = scale_max_return * max_returns[env_name]
+    if alg_name == 'sacgage':
+        agent.log_std_min = np.log(gage_init_std * (1-goal_achievement))
+
     for i in tqdm.tqdm(range(1, max_steps + 1),
                        smoothing=0.1,
                        disable=not use_tqdm):
@@ -267,17 +296,20 @@ def train(
         observation = next_observation
 
         if terminate or truncate:
+            goal_achievement = max(0.0, min(0.95*goal_achievement + 0.05*info["episode"]["return"]/max_return, 0.99))
+            if alg_name == 'sacgage':
+                agent.log_std_min = np.log(gage_init_std * (1-goal_achievement))
+
             observation, _ = env.reset()
             terminate = False
             truncate = False
             for k, v in info['episode'].items():
-                summary_writer.add_scalar(f'training/{k}', v,
-                                          info['total']['timesteps'])
+                summary_writer.add_scalar(f'training/{k}', v, i)
 
             if 'is_success' in info:
                 summary_writer.add_scalar(f'training/success',
                                           info['is_success'],
-                                          info['total']['timesteps'])
+                                          i)
 
         if i >= training_start:
             for _ in range(updates_per_step):
@@ -293,12 +325,11 @@ def train(
             eval_stats = evaluate(agent, eval_env, eval_episodes)
 
             for k, v in eval_stats.items():
-                summary_writer.add_scalar(f'evaluation/average_{k}s', v,
-                                          info['total']['timesteps'])
+                summary_writer.add_scalar(f'evaluation/average_{k}s', v, i)
             summary_writer.flush()
 
             eval_returns.append(
-                (info['total']['timesteps'], eval_stats['return']))
+                (i, eval_stats['return']))
             np.savetxt(os.path.join(logs_dir, f'{seed}.txt'),
                        eval_returns,
                        fmt=['%d', '%.1f'])

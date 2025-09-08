@@ -27,7 +27,7 @@ def update(key: PRNGKey,
            batch: Batch,
            discount: float,
            backup_entropy: bool) -> Tuple[Model, EnsembleState, InfoDict]:
-    dist = actor(batch.next_observations)
+    dist,_,_ = actor(batch.next_observations)
     next_actions = dist.sample(seed=key)
     next_log_probs = dist.log_prob(next_actions)
 

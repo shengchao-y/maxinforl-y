@@ -41,7 +41,9 @@ dmc_small:
     backup_entropy: true
     actor_lr: 0.0003
     critic_lr: 0.0003
-    temp_lr: 0.0003
+    temp_lr: 0.0
+    init_temperature: 0.0
+    max_gradient_norm: 1.0
   redq:
     hidden_dims: [256, 256]
     discount: 0.99
@@ -115,7 +117,9 @@ dmc_big:
     backup_entropy: true
     actor_lr: 0.0003
     critic_lr: 0.0003
-    temp_lr: 0.0003
+    temp_lr: 0.0
+    init_temperature: 0.0
+    max_gradient_norm: 1.0
   redq:
     hidden_dims: [ 1024, 1024 ]
     discount: 0.99
@@ -189,7 +193,9 @@ gym:
     backup_entropy: true
     actor_lr: 0.0003
     critic_lr: 0.0003
-    temp_lr: 0.0003
+    temp_lr: 0.0
+    init_temperature: 0.0
+    max_gradient_norm: 1.0
 
 humanoid_bench:
   env_kwargs:
@@ -233,9 +239,10 @@ humanoid_bench:
     target_entropy: NULL
     backup_entropy: true
     actor_lr: 0.0005
-    critic_lr: 0.0005
-    temp_lr: 0.0005
+    critic_lr: 0.0001
+    temp_lr: 0.0
     init_temperature: 0.0
+    max_gradient_norm: 1.0
 
 cartpole-swingup_sparse:
   env_class: dmc_small

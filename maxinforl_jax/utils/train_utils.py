@@ -24,16 +24,14 @@ import jax
 from jaxrl import wrappers
 
 max_returns = {
-    "humanoid_bench/h1-run-v0": 800.0,
     "cartpole-swingup_sparse": 800,
     "quadruped-run": 800.0,
     "walker-run": 800.0,
-    "Humanoid-v3": 5000.0,
-    "Ant-v3": 5500.0,
-    "Walker2d-v3": 4800.0,
-    "HalfCheetah-v3": 11000.0,
-    "Hopper-v3": 3600.0,
-    "Swimmer-v3": 90.0,
+    "MountainCarContinuous-v0": 100.0,
+    "humanoid-walk": 800.0,
+    "humanoid_bench/h1-stand-v0": 800.0,
+    "humanoid_bench/h1-walk-v0": 800.0,
+    "humanoid_bench/h1-run-v0": 800.0,
 }
 
 
@@ -148,7 +146,7 @@ def train(
         scale_max_return: float = 1.0,
 ):
     time_run = datetime.datetime.now()
-    s_time_run = f"{time_run.year}{time_run.month}{time_run.day}-{time_run.hour}{time_run.minute}"
+    s_time_run = f"{time_run.year}{str(time_run.month).zfill(2)}{str(time_run.day).zfill(2)}-{str(time_run.hour).zfill(2)}{str(time_run.minute).zfill(2)}"
     run_name = f"{env_name}_{alg_name}_g-{gage_init_std}-{scale_max_return}_lc-_{seed}_{s_time_run}"
 
     if save_video:

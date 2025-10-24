@@ -35,6 +35,11 @@ pip install -U "jax[cuda12]"
 
 To run HumanoidBench experiments, please install the benchmark dependencies following the instructions in the [original repo](https://github.com/carlosferrazza/humanoid-bench).
 
+HumanoidBench needs:
+```sh
+pip install "jax[cuda12]==0.4.28"
+```
+
 ## Training
 
 Training script:

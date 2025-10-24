@@ -25,7 +25,7 @@ from jaxrl import wrappers
 
 max_returns = {
     "cartpole-swingup_sparse": 800,
-    "quadruped-run": 800.0,
+    "quadruped-run": 1000.0,
     "walker-run": 800.0,
     "MountainCarContinuous-v0": 100.0,
     "humanoid-walk": 800.0,
@@ -147,7 +147,10 @@ def train(
 ):
     time_run = datetime.datetime.now()
     s_time_run = f"{time_run.year}{str(time_run.month).zfill(2)}{str(time_run.day).zfill(2)}-{str(time_run.hour).zfill(2)}{str(time_run.minute).zfill(2)}"
-    run_name = f"{env_name}_{alg_name}_g-{gage_init_std}-{scale_max_return}_lc-_{seed}_{s_time_run}"
+    if alg_name=="sacgage":
+        run_name = f"{env_name}_{alg_name}_g-{gage_init_std}-{scale_max_return}-lc-{alg_kwargs['gmean_factor']}_{seed}_{s_time_run}"
+    else:
+        run_name = f"{env_name}_{alg_name}_{seed}_{s_time_run}"
 
     if save_video:
         video_train_folder = os.path.join(logs_dir, 'video', 'train')

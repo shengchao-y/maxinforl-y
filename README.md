@@ -22,15 +22,14 @@ of off-policy model-free RL methods for continuous state-action spaces. We provi
 ## Installation
 
 ```sh
+conda create --name maxinforl python=3.10
+conda activate maxinforl
 pip install -e .
 ```
 
-### Remark: 
-The above command does not install the GPU version of [JAX][jax]. Please manually install the GPU version if needed.
-For instance using 
-
+Install [jaxrl-y](https://github.com/shengchao-y/jaxrl-y) for GAGE implememtation with SAC.
 ```sh
-pip install -U "jax[cuda12]"
+pip install -e <Path to jaxrl-y>
 ```
 
 To run HumanoidBench experiments, please install the benchmark dependencies following the instructions in the [original repo](https://github.com/carlosferrazza/humanoid-bench).

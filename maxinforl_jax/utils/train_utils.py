@@ -147,8 +147,12 @@ def train(
 ):
     time_run = datetime.datetime.now()
     s_time_run = f"{time_run.year}{str(time_run.month).zfill(2)}{str(time_run.day).zfill(2)}-{str(time_run.hour).zfill(2)}{str(time_run.minute).zfill(2)}"
+    if "max_gradient_norm" in alg_kwargs:
+        grad_clip = "GradClip"
+    else:
+        grad_clip = "NoGradClip"
     if alg_name=="sacgage":
-        run_name = f"{env_name}_{alg_name}_g-{gage_init_std}-{scale_max_return}-lc-{alg_kwargs['gmean_factor']}_{seed}_{s_time_run}"
+        run_name = f"{env_name}_{alg_name}_g-{gage_init_std}-{scale_max_return}-lc-{alg_kwargs['gmean_factor']}_{seed}_{s_time_run}_{grad_clip}"
     else:
         run_name = f"{env_name}_{alg_name}_{seed}_{s_time_run}"
 

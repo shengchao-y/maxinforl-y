@@ -318,3 +318,83 @@ humanoid_bench/h1-run-v0:
   env_class: humanoid_bench
   max_steps: 5_000_000
   eval_interval: 10_000
+
+humanoid_bench/h1-reach-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-hurdle-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-crawl-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-push-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-highbar_simple-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-door-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-truck-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-basketball-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-package-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-sit_simple-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-sit_hard-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-balance_simple-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-balance_hard-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-stair-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-slide-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000
+
+humanoid_bench/h1-pole-v0:
+  env_class: humanoid_bench
+  max_steps: 10_000_000
+  eval_interval: 20_000

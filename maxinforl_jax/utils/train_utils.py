@@ -32,6 +32,22 @@ max_returns = {
     "humanoid_bench/h1-stand-v0": 800.0,
     "humanoid_bench/h1-walk-v0": 800.0,
     "humanoid_bench/h1-run-v0": 800.0,
+    "humanoid_bench/h1-reach-v0": 12000,
+    "humanoid_bench/h1-hurdle-v0": 700,
+    "humanoid_bench/h1-crawl-v0": 700,
+    "humanoid_bench/h1-push-v0": 700,
+    "humanoid_bench/h1-highbar_simple-v0": 750,
+    "humanoid_bench/h1-door-v0": 600,
+    "humanoid_bench/h1-truck-v0": 3000,
+    "humanoid_bench/h1-basketball-v0": 1200,
+    "humanoid_bench/h1-package-v0": 1500,
+    "humanoid_bench/h1-sit_simple-v0": 750,
+    "humanoid_bench/h1-sit_hard-v0": 750,
+    "humanoid_bench/h1-balance_simple-v0": 800,
+    "humanoid_bench/h1-balance_hard-v0": 800,
+    "humanoid_bench/h1-stair-v0": 700,
+    "humanoid_bench/h1-slide-v0": 700,
+    "humanoid_bench/h1-pole-v0": 700,
 }
 
 
@@ -147,12 +163,8 @@ def train(
 ):
     time_run = datetime.datetime.now()
     s_time_run = f"{time_run.year}{str(time_run.month).zfill(2)}{str(time_run.day).zfill(2)}-{str(time_run.hour).zfill(2)}{str(time_run.minute).zfill(2)}"
-    if "max_gradient_norm" in alg_kwargs:
-        grad_clip = "GradClip"
-    else:
-        grad_clip = "NoGradClip"
     if alg_name=="sacgage":
-        run_name = f"{env_name}_{alg_name}_g-{gage_init_std}-{scale_max_return}-lc-{alg_kwargs['gmean_factor']}_{seed}_{s_time_run}_{grad_clip}"
+        run_name = f"{env_name}_{alg_name}_g-{gage_init_std}-{scale_max_return}-lc-{alg_kwargs['gmean_factor']}_{seed}_{s_time_run}"
     else:
         run_name = f"{env_name}_{alg_name}_{seed}_{s_time_run}"
 
